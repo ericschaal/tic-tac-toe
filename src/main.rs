@@ -63,6 +63,9 @@ fn main() -> Result<()> {
                     KeyCode::Down => {
                         board.move_cursor_down();
                     }
+                    KeyCode::Enter | KeyCode::Char(' ') => {
+                        board.play();
+                    }
                     _ => {}
                 }
             }
