@@ -9,9 +9,10 @@ use crossterm::{
     event::{Event}
 };
 use crossterm::event::KeyCode;
-use tic_tac_toe::board::Board;
 use tic_tac_toe::draw::Drawable;
 use tic_tac_toe::{frame, render};
+use tic_tac_toe::board::Board;
+use tic_tac_toe::movement::MoveDirection;
 
 const FRAME_PER_S: f64 = 60.0;
 
@@ -52,16 +53,16 @@ fn main() -> Result<()> {
                         break 'gameloop;
                     }
                     KeyCode::Left => {
-                        board.move_cursor_left();
+                        board.move_cursor(MoveDirection::LEFT);
                     }
                     KeyCode::Right => {
-                        board.move_cursor_right();
+                        board.move_cursor(MoveDirection::RIGHT);
                     }
                     KeyCode::Up => {
-                        board.move_cursor_up();
+                        board.move_cursor(MoveDirection::UP);
                     }
                     KeyCode::Down => {
-                        board.move_cursor_down();
+                        board.move_cursor(MoveDirection::DOWN);
                     }
                     KeyCode::Enter | KeyCode::Char(' ') => {
                         board.play();

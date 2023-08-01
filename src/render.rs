@@ -9,9 +9,7 @@ use crate::frame::Frame;
 
 pub fn render(stdout: &mut io::Stdout, previous_frame: &Frame, next_frame: &Frame, force: bool) -> Result<()> {
     if force {
-        stdout.queue(SetBackgroundColor(Color::Blue))?;
         stdout.queue(Clear(ClearType::All))?;
-        stdout.queue(SetBackgroundColor(Color::Black))?;
     }
     for (x, col) in next_frame.iter().enumerate() {
         for (y, content) in col.iter().enumerate() {

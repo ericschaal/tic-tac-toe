@@ -1,7 +1,9 @@
 pub mod render;
 pub mod frame;
 pub mod draw;
-pub mod board;
 pub mod player;
-const NUM_ROWS: usize = 5;
-const NUM_COLS: usize = 11;
+pub mod movement;
+pub mod board;
+
+const NUM_ROWS: usize = 7;
+const NUM_COLS: usize = 16;
