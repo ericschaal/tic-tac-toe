@@ -1,8 +1,11 @@
+use std::time::Duration;
+
+use crate::NUM_ROWS;
 use crate::draw::Drawable;
 use crate::frame::{Frame, FrameCoordinates};
-use crate::{NUM_ROWS};
 use crate::movement::MoveDirection;
 use crate::player::Player;
+use crate::updatable::Updatable;
 
 const GRID_ROWS: usize = 5;
 const GRID_COLS: usize = 11;
@@ -53,6 +56,10 @@ impl Default for Board {
             cursor_position: BoardCoordinates::new(2, 2),
         }
     }
+}
+
+impl Updatable for Board {
+    fn update(&mut self, delta: Duration) {}
 }
 
 impl Board {
