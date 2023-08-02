@@ -24,7 +24,7 @@ mod timing;
 pub struct Engine<State> {
     fps: f64,
     window: Window,
-    pub sprites: HashMap<String, Sprite>,
+    sprites: HashMap<String, Sprite>,
     pub delta: Duration,
     pressed_keys: Vec<KeyCode>,
     logic_fns: Vec<fn(&mut Engine<State>, &mut State)>,
@@ -64,12 +64,20 @@ impl<State> Engine<State> {
         self
     }
 
-    pub fn add_sprite(mut self, label: String, sprite: Sprite) -> Self {
+    pub fn with_sprite(mut self, label: String, sprite: Sprite) -> Self {
         self.sprites.insert(label, sprite);
         self
     }
 
-    pub fn add_logic(mut self, logic_fn: fn(&mut Engine<State>, &mut State)) -> Self {
+    pub fn insert_sprite(&mut self, label: &str, sprite: Sprite) {
+        self.sprites.insert(label.into(), sprite);
+    }
+
+    pub fn remove_sprite(&mut self, label: &str) {
+        self.sprites.remove(label);
+    }
+
+    pub fn with_logic(mut self, logic_fn: fn(&mut Engine<State>, &mut State)) -> Self {
         self.logic_fns.push(logic_fn);
         self
     }

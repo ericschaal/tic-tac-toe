@@ -19,12 +19,12 @@ fn main() -> Result<()> {
 
     Engine::new(Window::new(50, 50))
         .set_fps(60.0)
-        .add_sprite("grid".into(), grid)
-        .add_logic(base_logic)
-        .add_logic(game_movement)
-        .add_logic(cursor_logic)
-        .add_logic(markers_logic)
-        .add_logic(win_lose_logic)
+        .with_sprite("grid".into(), grid)
+        .with_logic(base_logic)
+        .with_logic(game_movement)
+        .with_logic(cursor_logic)
+        .with_logic(markers_logic)
+        .with_logic(win_lose_logic)
         .run(Game::default())?;
 
     Ok(())
@@ -75,11 +75,11 @@ fn cursor_logic(engine: &mut Engine<Game>, game: &mut Game) {
         sprite.layer = 1;
 
         if game.turn == Player::ONE {
-            engine.sprites.remove("p2");
-            engine.sprites.insert("p1".into(), sprite);
+            engine.remove_sprite("p2");
+            engine.insert_sprite("p1", sprite);
         } else if game.turn == Player::TWO {
-            engine.sprites.remove("p1");
-            engine.sprites.insert("p2".into(), sprite);
+            engine.remove_sprite("p1");
+            engine.insert_sprite("p2", sprite);
         }
     }
 }
@@ -95,7 +95,7 @@ fn markers_logic(engine: &mut Engine<Game>, game: &mut Game) {
                 sprite.translation = Vector2D::new(translate.x, translate.y);
                 sprite.layer = 1;
 
-                engine.sprites.insert(format!("{}-{}", x, y), sprite);
+                engine.insert_sprite(format!("{}-{}", x, y).as_str(), sprite);
             }
         }
     }
@@ -111,13 +111,13 @@ fn win_lose_logic(engine: &mut Engine<Game>, game: &mut Game) {
         format!("Turn: Player {:?}", game.turn)
     };
 
-    engine.sprites.remove("win-lose");
+    engine.remove_sprite("win-lose");
 
     let mut sprite = Sprite::from_string("win-lose".into(), str);
     sprite.layer = 1;
     sprite.translation = Vector2D::new(0, GRID_HEIGHT + 1);
 
-    engine.sprites.insert("win-lose".into(), sprite);
+    engine.insert_sprite("win-lose", sprite);
 }
 
 
