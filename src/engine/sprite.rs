@@ -25,13 +25,13 @@ fn transpose<T>(v: Vec<Vec<T>>) -> Vec<Vec<T>>
 
 impl Sprite {
 
-    pub fn from_string(label: String, string: String) -> Self {
+    pub fn from_string(label: &str, string: &str) -> Self {
         let mut data = vec![];
-        let row = Sprite::string_to_utf8(string.as_str());
+        let row = Sprite::string_to_utf8(string);
         data.push(row);
 
         Self {
-            label,
+            label: label.to_string(),
             visible: true,
             data: transpose(data),
             translation: Vector2D::new(0, 0),
@@ -39,7 +39,7 @@ impl Sprite {
         }
     }
 
-    pub fn from_file<P: AsRef<Path>>(label: String, path: P) -> Result<Sprite, Error> {
+    pub fn from_file<P: AsRef<Path>>(label: &str, path: P) -> Result<Sprite, Error> {
         if let Ok(content) = read_to_string(path) {
             let lines: Vec<&str> = content.lines().collect();
             let height = lines.len();
@@ -61,7 +61,7 @@ impl Sprite {
             println!("{}", data.is_empty());
 
             Ok(Self {
-                label,
+                label: label.to_string(),
                 visible: true,
                 data: transpose(data),
                 translation: Vector2D::new(0, 0),
@@ -72,6 +72,16 @@ impl Sprite {
             Err(anyhow!("Could not load sprite from file."))
         }
 
+    }
+
+    pub fn with_layer(mut self, layer: i32) -> Self {
+        self.layer = layer;
+        self
+    }
+
+    pub fn with_translation(mut self, translation: Vector2D<usize>) -> Self {
+        self.translation = translation;
+        self
     }
 
     fn string_to_utf8(str: &str) -> Vec<char> {

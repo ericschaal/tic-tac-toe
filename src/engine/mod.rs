@@ -5,6 +5,7 @@ use std::thread;
 use std::time::Duration;
 use crossterm::event::KeyCode;
 use crate::engine::drawable::Drawable;
+use crate::engine::framerate::FrameRate;
 use crate::engine::keyboard::keyboard::Keyboard;
 use crate::engine::rendering::frame;
 use crate::engine::rendering::renderer::Renderer;
@@ -16,13 +17,14 @@ use crate::engine::window::Window;
 pub mod sprite;
 pub mod window;
 
+mod framerate;
 mod keyboard;
 mod drawable;
 mod rendering;
 mod timing;
 
 pub struct Engine<State> {
-    fps: f64,
+    fps: u64,
     window: Window,
     sprites: HashMap<String, Sprite>,
     pub delta: Duration,
@@ -34,7 +36,7 @@ pub struct Engine<State> {
 impl<State> Default for Engine<State> {
     fn default() -> Self {
         Self {
-            fps: 60.0,
+            fps: 60,
             window: Window::new(100, 100),
             sprites: HashMap::default(),
             logic_fns: vec![],
@@ -50,7 +52,7 @@ impl<State> Engine<State> {
     pub fn new(window: Window) -> Self {
         Self {
             window,
-            fps: 60.0,
+            fps: 60,
             sprites: HashMap::default(),
             logic_fns: vec![],
             delta: Duration::from_millis(0),
@@ -59,13 +61,13 @@ impl<State> Engine<State> {
         }
     }
     
-    pub fn set_fps(mut self, fps: f64) -> Self {
+    pub fn set_fps(mut self, fps: u64) -> Self {
         self.fps = fps;
         self
     }
 
-    pub fn with_sprite(mut self, label: String, sprite: Sprite) -> Self {
-        self.sprites.insert(label, sprite);
+    pub fn with_sprite(mut self, label: &str, sprite: Sprite) -> Self {
+        self.sprites.insert(label.to_string(), sprite);
         self
     }
 
@@ -75,6 +77,10 @@ impl<State> Engine<State> {
 
     pub fn remove_sprite(&mut self, label: &str) {
         self.sprites.remove(label);
+    }
+
+    pub fn get_sprite(&self, label: &str) -> Option<&Sprite> {
+        self.sprites.get(label)
     }
 
     pub fn with_logic(mut self, logic_fn: fn(&mut Engine<State>, &mut State)) -> Self {
@@ -120,9 +126,7 @@ impl<State> Engine<State> {
             // Send Frame
             renderer.send(frame)?;
 
-            if let Some(sleep_duration) = Duration::from_secs_f64(1.0 / 60.0).checked_sub(self.delta) {
-                thread::sleep(sleep_duration);
-            }
+            FrameRate::cap(self.fps, &self.delta);
 
         }
 
