@@ -61,16 +61,18 @@ impl Game {
     }
 
     pub fn play(&mut self) {
-        self.state[self.cursor_position.x][self.cursor_position.y] = self.turn.clone();
-        self.turn = match self.turn {
-            Player::ONE => Player::TWO,
-            Player::TWO => Player::ONE,
-            _ => Player::ONE
-        };
-        if let Some(empty_cell) = self.find_empty_cell() {
-            self.cursor_position = empty_cell;
+        if !self.is_game_over() {
+            self.state[self.cursor_position.x][self.cursor_position.y] = self.turn.clone();
+            self.turn = match self.turn {
+                Player::ONE => Player::TWO,
+                Player::TWO => Player::ONE,
+                _ => Player::ONE
+            };
+            if let Some(empty_cell) = self.find_empty_cell() {
+                self.cursor_position = empty_cell;
+            }
+            self.winner = self.compute_winner();
         }
-        self.winner = self.compute_winner();
     }
 
     fn find_empty_cell(&self) -> Option<BoardCoordinates> {
