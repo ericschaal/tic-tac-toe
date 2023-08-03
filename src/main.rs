@@ -6,7 +6,7 @@ use tic_tac_toe::{
 };
 use tic_tac_toe::engine::window::Window;
 use tic_tac_toe::tictactoe::coordinates::BoardCoordinates;
-use tic_tac_toe::tictactoe::game::Game;
+use tic_tac_toe::tictactoe::game::TicTacToe;
 use tic_tac_toe::tictactoe::movement::MoveDirection;
 use tic_tac_toe::tictactoe::player::Player;
 
@@ -38,7 +38,7 @@ fn main() -> Result<()> {
         .with_logic(markers_logic)
         .with_logic(win_lose_logic)
         .with_logic(fps_counter)
-        .run(Game::default())?;
+        .run(TicTacToe::default())?;
 
     Ok(())
 }
@@ -54,7 +54,7 @@ fn base_logic<T>(engine: &mut Engine<T>, _: &mut T) {
     }
 }
 
-fn game_movement(engine: &mut Engine<Game>, game: &mut Game) {
+fn game_movement(engine: &mut Engine<TicTacToe>, game: &mut TicTacToe) {
     for key in engine.get_pressed_keys() {
         match key {
             KeyCode::Left => {
@@ -77,7 +77,7 @@ fn game_movement(engine: &mut Engine<Game>, game: &mut Game) {
     }
 }
 
-fn cursor_logic(engine: &mut Engine<Game>, game: &mut Game) {
+fn cursor_logic(engine: &mut Engine<TicTacToe>, game: &mut TicTacToe) {
     if !game.is_game_over() {
         let cursor_str = if game.turn == Player::ONE {"x"} else {"o"};
         let mut sprite = Sprite::from_string("cursor", cursor_str);
@@ -98,7 +98,7 @@ fn cursor_logic(engine: &mut Engine<Game>, game: &mut Game) {
     }
 }
 
-fn markers_logic(engine: &mut Engine<Game>, game: &mut Game) {
+fn markers_logic(engine: &mut Engine<TicTacToe>, game: &mut TicTacToe) {
     for (x, col) in game.state.iter().enumerate() {
         for (y, cell) in col.iter().enumerate() {
             if *cell == Player::ONE || *cell == Player::TWO {
@@ -116,7 +116,7 @@ fn markers_logic(engine: &mut Engine<Game>, game: &mut Game) {
     }
 }
 
-fn win_lose_logic(engine: &mut Engine<Game>, game: &mut Game) {
+fn win_lose_logic(engine: &mut Engine<TicTacToe>, game: &mut TicTacToe) {
 
     let str = if game.winner != Player::NONE {
         format!("Winner: {:?}", game.winner)

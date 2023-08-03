@@ -6,14 +6,14 @@ type BoardState = Vec<Vec<Player>>;
 
 const BOARD_SIZE: usize = 3;
 
-pub struct Game {
+pub struct TicTacToe {
     pub turn: Player,
     pub winner: Player,
     pub state: BoardState,
     pub cursor_position: BoardCoordinates,
 }
 
-impl Default for Game {
+impl Default for TicTacToe {
     fn default() -> Self {
         let mut state = Vec::with_capacity(3);
         for _ in 0..BOARD_SIZE {
@@ -30,7 +30,7 @@ impl Default for Game {
     }
 }
 
-impl Game {
+impl TicTacToe {
     pub fn move_cursor(&mut self, direction: MoveDirection) {
         if let Some(new_pos) = self.find_next_available_cell(&self.cursor_position, &direction) {
             self.cursor_position = new_pos;
